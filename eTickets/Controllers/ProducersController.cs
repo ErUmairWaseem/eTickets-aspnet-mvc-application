@@ -1,25 +1,42 @@
 ﻿using eTickets.Data;
 using eTickets.Data.Services;
+using eTickets.Data.Static;
 using eTickets.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace eTickets.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class ProducersController : Controller
     {
         private readonly IProducersService _service;
+
         public ProducersController(IProducersService service)
         {
             _service = service;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var allProducers  = await _service.GetAllAsync();
+            var allProducers = await _service.GetAllAsync();
             return View(allProducers);
         }
 
-
+        //GET: producers/details/1
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int id)
+        {
+            var producerDetails = await _service.GetByIdAsync(id);
+            if (producerDetails == null) return View("NotFound");
+            return View(producerDetails);
+        }
 
         //GET: producers/create
         public IActionResult Create()
@@ -30,33 +47,11 @@ namespace eTickets.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Bind("ProfilePictureURL,FullName,Bio")] Producer producer)
         {
-            if (!ModelState.IsValid)
-            {
-                foreach (var modelState in ViewData.ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        Debug.WriteLine($"Error: {error.ErrorMessage}");
-                    }
-                }
-                return View(producer);
-            }
+            if (!ModelState.IsValid) return View(producer);
 
-            await _service.AddAsync(producer); // Change: Ensure _service.AddAsync(producer) correctly saves the producer.
+            await _service.AddAsync(producer);
             return RedirectToAction(nameof(Index));
         }
-
-
-
-        //GET: producers/details/1
-        public async Task<IActionResult> Details(int id)
-        {
-            var producerDetails = await _service.GetByIdAsync(id);
-            if (producerDetails == null) return View("NotFound");
-            return View(producerDetails);
-        }
-
-
 
         //GET: producers/edit/1
         public async Task<IActionResult> Edit(int id)
@@ -79,8 +74,6 @@ namespace eTickets.Controllers
             return View(producer);
         }
 
-
-
         //GET: producers/delete/1
         public async Task<IActionResult> Delete(int id)
         {
@@ -98,6 +91,5 @@ namespace eTickets.Controllers
             await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

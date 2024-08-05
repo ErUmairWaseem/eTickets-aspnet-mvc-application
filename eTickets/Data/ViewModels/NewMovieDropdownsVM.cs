@@ -1,13 +1,4 @@
-﻿/*using eTickets.Models;
-
-namespace eTickets.Data.ViewModels
-{
-    public class NewMovieDropdownsVM
-    {
-    }
-}*/
-
-
+﻿
 ﻿using eTickets.Models;
 using System;
 using System.Collections.Generic;
