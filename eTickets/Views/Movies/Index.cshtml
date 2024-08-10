@@ -52,17 +52,23 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
-                                    <i class="bi bi-eye-fill"></i> Show Details
-                                </a>
-                                <a class="btn btn-success text-white @((DateTime.Now > item.EndDate) ? "disabled" : "")" 
-                                   asp-controller="Orders" 
-                                   asp-action="AddItemToShoppingCart" 
-                                   asp-route-id="@item.Id">
-                                <i class="bi bi-cart-plus"></i> Add to Cart (Price @item.Price.ToString("c"))</a>
-                            </p>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">
+                                        <i class="bi bi-eye-fill"></i> Show Details
+                                    </a>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                    <a class="btn btn-success text-white @((DateTime.Now > item.EndDate) ? "disabled" : "")"
+                                       asp-controller="Orders"
+                                       asp-action="AddItemToShoppingCart"
+                                       asp-route-id="@item.Id"
+                                       style="white-space: nowrap;">
+                                        <i class="bi bi-cart-plus"></i> Add to Cart (Price @item.Price.ToString("c"))
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
